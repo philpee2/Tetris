@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tetris</title>
+  
+	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+  
+  
+  <script src="js/underscore.js"></script>
+  <script src="js/keymaster.js"></script>
+	<script src="js/jquery.js"></script>
+  
+  <script src="js/settings.js"></script>
+  <script src="js/cell.js"></script>
+  <script src="js/block.js"></script>
+  <script src="js/game.js"></script>
+  
+  
+  
+  <canvas 
+		id="game" 
+		width="250" 
+		height="500" 
+  >
+	</canvas>
+  
+  <span>Score: </span> <span id="score">0</span>
+  
+</head>
+
+<body>
+  
+  <script>
+  $(function() {
+	  var game = document.getElementById("game");
+	  var gameContext = game.getContext("2d");
+	  var tetrisGame = new TetrisGame.Game(gameContext); 
+		tetrisGame.start();
+  })
+  </script>
+  
+</body>
