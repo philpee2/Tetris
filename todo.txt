@@ -1,2 +1,0 @@
-- Add grid lines
-- Fix end-game alert bug
