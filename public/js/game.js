@@ -36,7 +36,6 @@
   Game.SCORE_MAP = Settings.game.SCORE_MAP
 
   
-  // TODO: CHANGE GETTER AND SETTERS TO TAKE POS ARRAY, INSTEAD OF X AND Y 
   Game.prototype.getGridItem = function(pos) {
     return this.grid[pos[1]][pos[0]];
   };
