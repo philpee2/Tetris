@@ -45,7 +45,7 @@
   };
   
   Game.prototype.isEmpty = function(pos) {
-    return !this.getGridItem(pos);
+    return this.getGridItem(pos) === null;
   };
   
   Game.prototype.start = function() {

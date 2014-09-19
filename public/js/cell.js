@@ -66,17 +66,9 @@
     }
   };
   
-  Cell.prototype.rotateAroundPivot = function(pivot) {
-    var pivotX = pivot.pos[0];
-    var pivotY = pivot.pos[1];
-    var distanceX = this.pos[0] - pivotX;
-    var distanceY = this.pos[1] - pivotY;
-    this.setX(pivotX - distanceY);
-    this.setY(pivotY + distanceX);
-  };
-  
-  Cell.prototype.canRotate = function(pivot) {
-    var game = this.block.game; 
+  Cell.prototype.rotatedPosition = function(pivot) {
+    // Returns the new position that this cell would be in if it rotated. 
+    // Does not actually change the cell's position
     
     var pivotX = pivot.pos[0];
     var pivotY = pivot.pos[1];
@@ -84,7 +76,19 @@
     var distanceY = this.pos[1] - pivotY;
     var newX = pivotX - distanceY;
     var newY = pivotY + distanceX;
-    return game.validPosition([newX, newY]);
+    return [newX, newY]; 
+  };
+  
+  Cell.prototype.rotateAroundPivot = function(pivot) {
+    var rotatedPos = this.rotatedPosition(pivot); 
+    this.setX(rotatedPos[0]);
+    this.setY(rotatedPos[1]);
+  };
+  
+  Cell.prototype.canRotate = function(pivot) {
+    var game = this.block.game; 
+    var rotatedPos = this.rotatedPosition(pivot);
+    return game.validPosition(rotatedPos);
   };
   
   Cell.prototype.getX = function() {
