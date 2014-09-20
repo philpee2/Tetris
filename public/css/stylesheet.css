@@ -1,3 +1,7 @@
 canvas#game {
   border: 2px solid black;
 }
+
+.text {
+  font-family: "Arial";
+}

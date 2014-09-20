@@ -78,6 +78,7 @@
     this.ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
     this.block.draw(this.ctx);
     this.drawGrid();
+    this.drawGridLines();
   };
   
   Game.prototype.drawGrid = function() {
@@ -92,6 +93,24 @@
         }
       }
     }
+  };
+  
+  Game.prototype.drawGridLines = function() {
+    // var ctx = this.ctx;
+    //
+    //
+    // for (var i = 0; i < Game.DIM_X; i += Settings.cell.DIMENSION) {
+    //   ctx.moveTo(i, 0);
+    //   ctx.lineTo(i, Game.DIM_Y);
+    // }
+    //
+    // for (var j = 0; j < Game.DIM_Y; j += Settings.cell.DIMENSION) {
+    //   ctx.moveTo(0, j);
+    //   ctx.lineTo(Game.DIM_X, j);
+    // }
+    //
+    // ctx.strokeStyle = "black";
+    // ctx.stroke();
   };
   
   Game.prototype.stop = function(){
