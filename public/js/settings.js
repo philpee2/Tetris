@@ -29,13 +29,13 @@
         F: [[5, 19], [4, 19], [6, 19], [6, 18]]
       },
       TYPE_COLORS: {
-        L: "red",
-        T: "blue",
-        S: "blueviolet",
-        Z: "green",
-        O: "gold",
-        I: "cadetblue",
-        F: "darkgray"
+        L: "#e74c3c",
+        T: "#3498db",
+        S: "#9b59b6",
+        Z: "#27ae60",
+        O: "#f1c40f",
+        I: "#34495e",
+        F: "#95a5a6"
       }
     },
     

@@ -94,8 +94,6 @@
     }
   };
   
-  };
-  
   Game.prototype.stop = function(){
     clearInterval(this.intervalID);
   };
