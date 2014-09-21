@@ -82,13 +82,23 @@
       // and check to see if the player has cleared any lines. 
       this.cells.forEach(function(cell) {
         block.game.setGridItem(cell.pos, cell); 
-        if (cell.pos[1] >= 19) {
-          block.game.gameOver();
-        }
       });
+      if (this.aboveTop()) {
+        this.game.gameOver();
+      }
       this.game.block = Block.randomBlock(this.game);
       this.game.checkForLines();
     }
+  };
+  
+  Block.prototype.aboveTop = function() {
+    for (var i = 0; i < this.cells.length; i++) {
+      var cell = this.cells[i];
+      if (cell.getY() >= this.game.HEIGHT - 1) {
+        return true; 
+      }
+    }
+    return false; 
   };
   
   Block.prototype.quickDrop = function() {

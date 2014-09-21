@@ -100,7 +100,19 @@
   
   Game.prototype.gameOver = function() {
     this.stop();
-    alert("Game Over! Your score is " + this.score);
+    var again = confirm("Game Over! Your score is " + this.score + ". Do you want to play again?");
+    if (again) {
+      this.restart();
+    }
+  };
+  
+  Game.prototype.restart = function() {
+    this.score = 0; 
+    $("#score").html(this.score);
+    this.grid = createEmptyGrid(this.WIDTH, this.HEIGHT);
+    this.block = Block.randomBlock(this);
+    this.frame = 0;
+    this.start();
   };
   
   Game.prototype.bindKeyHandlers = function() {
