@@ -1,19 +1,19 @@
 (function(root) {
   var TetrisGame = root.TetrisGame = (root.TetrisGame || {});
-  var Settings = TetrisGame.Settings; 
-  
+  var Settings = TetrisGame.Settings;
+
   var Cell = TetrisGame.Cell = function(pos, block) {
-    this.pos = pos; 
+    this.pos = pos;
     this.block = block;
     this.color = block.color;
   };
-  
+
   Cell.DIMENSION = Settings.cell.DIMENSION;
 
   Cell.prototype.drop = function() {
     this.moveDirection("down");
   };
-  
+
   Cell.prototype.moveDirection = function(direction) {
     switch (direction) {
     case "left":
@@ -27,84 +27,84 @@
       break;
     }
   }
-  
+
   Cell.prototype.draw = function(ctx, pos) {
-    // If pos is provided, then this cell is on the game grid, and its own position 
-    // should be ignored. If pos is not provided, then this cell is in the live 
+    // If pos is provided, then this cell is on the game grid, and its own position
+    // should be ignored. If pos is not provided, then this cell is in the live
     // block, and its own position should be drawn.
     var pixelPos;
     if (pos === undefined) {
       pixelPos = Cell.mapToScreen(this.pos);
     } else {
-      pixelPos = Cell.mapToScreen(pos)
+      pixelPos = Cell.mapToScreen(pos);
     }
     var x = pixelPos[0];
     var y = pixelPos[1];
-    var dim = Cell.DIMENSION
+    var dim = Cell.DIMENSION;
     ctx.fillStyle = this.color;
     ctx.fillRect(x, y, dim, dim);
   };
-  
+
   Cell.mapToScreen = function(pos) {
     var x = pos[0];
     var y = pos[1];
-    var pixelX = x * Cell.DIMENSION; 
+    var pixelX = x * Cell.DIMENSION;
     var pixelY = Settings.game.DIM_Y - ((y + 1) * Cell.DIMENSION);
     return [pixelX, pixelY]
   };
-  
+
   Cell.prototype.canMoveDirection = function(direction, game) {
     var currX = this.getX();
     var currY = this.getY();
     switch (direction) {
     case "left":
       return game.validPosition([currX - 1, currY]);
-    case "right": 
+    case "right":
       return game.validPosition([currX + 1, currY]);
     case "down":
       return game.validPosition([currX, currY - 1]);
     }
   };
-  
+
   Cell.prototype.rotatedPosition = function(pivot) {
-    // Returns the new position that this cell would be in if it rotated. 
+    // Returns the new position that this cell would be in if it rotated.
     // Does not actually change the cell's position
-    
+
     var pivotX = pivot.pos[0];
     var pivotY = pivot.pos[1];
     var distanceX = this.pos[0] - pivotX;
     var distanceY = this.pos[1] - pivotY;
     var newX = pivotX - distanceY;
     var newY = pivotY + distanceX;
-    return [newX, newY]; 
+    return [newX, newY];
   };
-  
+
   Cell.prototype.rotateAroundPivot = function(pivot) {
-    var rotatedPos = this.rotatedPosition(pivot); 
+    var rotatedPos = this.rotatedPosition(pivot);
     this.setX(rotatedPos[0]);
     this.setY(rotatedPos[1]);
   };
-  
+
   Cell.prototype.canRotate = function(pivot) {
-    var game = this.block.game; 
+    var game = this.block.game;
     var rotatedPos = this.rotatedPosition(pivot);
     return game.validPosition(rotatedPos);
   };
-  
+
   Cell.prototype.getX = function() {
     return this.pos[0];
   };
-  
+
   Cell.prototype.getY = function() {
     return this.pos[1];
-  }; 
-  
+  };
+
   Cell.prototype.setX = function(val) {
     this.pos[0] = val;
   };
-  
+
   Cell.prototype.setY = function(val) {
     this.pos[1] = val;
   };
-  
+
 })(this);
