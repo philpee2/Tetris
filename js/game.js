@@ -11,29 +11,35 @@
     this.WIDTH = Settings.game.WIDTH;
     this.HEIGHT = Settings.game.HEIGHT;
 
+    // Speed represents how fast blocks move.
+    this.speed = 3;
+
+    this.paused = false;
+
+    this.bindKeyHandlers();
+
+    this.initializeNewGameState();
+  };
+
+  Game.prototype.initializeNewGameState = function() {
+    // The player's current score in the game.
+    this.score = 0;
+    $("#score").html(this.score);
+
     // The grid is a 2D array containing either nulls, or cell
     // objects. It represents
     // the game's grid of cells.
     this.grid = this.createEmptyGrid(this.WIDTH, this.HEIGHT);
 
-    // Speed represents how fast blocks move.
-    this.speed = 3;
-
     // This is the block that the player can currently control.
     this.block = Block.randomBlock(this);
-
     this.frame = 0;
-
-    // The player's current score in the game.
-    this.score = 0;
-
-    this.bindKeyHandlers();
   };
 
   Game.FPS = Settings.game.FPS;
   Game.DIM_X = Settings.game.DIM_X;
   Game.DIM_Y = Settings.game.DIM_Y;
-  Game.SCORE_MAP = Settings.game.SCORE_MAP
+  Game.SCORE_MAP = Settings.game.SCORE_MAP;
 
   Game.prototype.getGridItem = function(pos) {
     return this.grid[pos[1]][pos[0]];
@@ -62,7 +68,7 @@
     if (this.frame % movesPerSecond === 0) {
       this.move();
     }
-    this.frame = (this.frame + 1) % Game.FPS
+    this.frame = (this.frame + 1) % Game.FPS;
     this.draw();
   };
 
@@ -105,11 +111,7 @@
   };
 
   Game.prototype.restart = function() {
-    this.score = 0;
-    $("#score").html(this.score);
-    this.grid = this.createEmptyGrid(this.WIDTH, this.HEIGHT);
-    this.block = Block.randomBlock(this);
-    this.frame = 0;
+    this.initializeNewGameState();
     this.start();
   };
 
