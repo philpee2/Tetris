@@ -32,17 +32,15 @@
     // If pos is provided, then this cell is on the game grid, and its own position
     // should be ignored. If pos is not provided, then this cell is in the live
     // block, and its own position should be drawn.
-    var pixelPos;
-    if (pos === undefined) {
-      pixelPos = Cell.mapToScreen(this.pos);
-    } else {
-      pixelPos = Cell.mapToScreen(pos);
-    }
+    var pos = pos || this.pos;
+
+    // Convert the grid coordinate into a pixel coordinate
+    var pixelPos = Cell.mapToScreen(pos);
     var x = pixelPos[0];
     var y = pixelPos[1];
-    var dim = Cell.DIMENSION;
+    var dimension = Cell.DIMENSION;
     ctx.fillStyle = this.color;
-    ctx.fillRect(x, y, dim, dim);
+    ctx.fillRect(x, y, dimension, dimension);
   };
 
   Cell.mapToScreen = function(pos) {
@@ -50,7 +48,7 @@
     var y = pos[1];
     var pixelX = x * Cell.DIMENSION;
     var pixelY = Settings.game.DIM_Y - ((y + 1) * Cell.DIMENSION);
-    return [pixelX, pixelY]
+    return [pixelX, pixelY];
   };
 
   Cell.prototype.canMoveDirection = function(direction, game) {
@@ -85,8 +83,7 @@
     this.setY(rotatedPos[1]);
   };
 
-  Cell.prototype.canRotate = function(pivot) {
-    var game = this.block.game;
+  Cell.prototype.canRotate = function(pivot, game) {
     var rotatedPos = this.rotatedPosition(pivot);
     return game.validPosition(rotatedPos);
   };

@@ -15,7 +15,7 @@
     var block = this;
     var positions = Block.STARTING_POSITIONS[type];
     this.cells = positions.map(function(pos) {
-      return new Cell(pos.slice(0), block);
+      return new Cell(pos.slice(), block);
     });
   };
 
@@ -33,10 +33,9 @@
       // The first cell in a block represents the 'pivot', which other cells
       // rotate around
       var pivot = this.cells[0];
-      for (var i = 1; i < this.cells.length; i++) {
-        var cell = this.cells[i];
+      this.cells.forEach(function(cell) {
         cell.rotateAroundPivot(pivot);
-      }
+      });
     }
   };
 
@@ -47,13 +46,10 @@
     }
 
     var pivot = this.cells[0];
-    for (var i = 1; i < this.cells.length; i++) {
-      var cell = this.cells[i];
-      if (!cell.canRotate(pivot)) {
-        return false;
-      }
-    }
-    return true;
+    var game = this.game;
+    return _.all(this.cells, function(cell) {
+      return cell.canRotate(pivot, game);
+    });
   }
 
   Block.prototype.moveDirection = function(direction) {
@@ -72,32 +68,22 @@
 
   Block.prototype.drop = function() {
     var block = this;
+    var game = this.game;
     if (this.canMoveDirection("down")) {
       this.cells.forEach(function(cell) {
         cell.drop();
       });
     } else {
-      // If a block cannot drop further, update the game grid, create a new random block,
-      // and check to see if the player has cleared any lines.
-      this.cells.forEach(function(cell) {
-        block.game.setGridItem(cell.pos, cell);
-      });
-      if (this.aboveTop()) {
-        this.game.gameOver();
-      }
-      this.game.block = Block.randomBlock(this.game);
-      this.game.checkForLines();
+      // If a block cannot drop further, place it on the grid.
+      game.blockPlaced(this);
     }
   };
 
   Block.prototype.aboveTop = function() {
-    for (var i = 0; i < this.cells.length; i++) {
-      var cell = this.cells[i];
-      if (cell.getY() >= this.game.HEIGHT - 1) {
-        return true;
-      }
-    }
-    return false;
+    var game = this.game;
+    return _.any(this.cells, function(cell) {
+      return cell.getY() >= game.HEIGHT - 1;
+    });
   };
 
   Block.prototype.quickDrop = function() {
@@ -108,13 +94,9 @@
 
   Block.prototype.canMoveDirection = function(direction) {
     var game = this.game;
-    for (var i = 0; i < this.cells.length; i++) {
-      var cell = this.cells[i];
-      if (!cell.canMoveDirection(direction, game)) {
-        return false;
-      }
-    }
-    return true;
+    return _.all(this.cells, function(cell) {
+      return cell.canMoveDirection(direction, game);
+    });
   };
 
 })(this);
