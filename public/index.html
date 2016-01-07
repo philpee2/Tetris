@@ -2,66 +2,61 @@
 <html>
 <head>
   <title>Tetris</title>
-  
-	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
-  
-  
+
+  <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+
   <script src="js/underscore.js"></script>
   <script src="js/keymaster.js"></script>
-	<script src="js/jquery.js"></script>
-  
+  <script src="js/jquery.js"></script>
+
   <script src="js/settings.js"></script>
   <script src="js/cell.js"></script>
   <script src="js/block.js"></script>
   <script src="js/game.js"></script>
-  
-  
+
+
 </head>
-  
+
 <body>
-  
-  <canvas 
-		id="game" 
-		width="250" 
-		height="500" 
+
+  <canvas
+    id="game"
+    width="250"
+    height="500"
   >
-	</canvas>
-  
+  </canvas>
+
 
   <span class="text">Score: </span> <span class="text" id="score">0</span>
-  
+
     <div class="text" id="controls">
       <p>Controls: </p>
       <ul>
         <li>
           <strong>Move block: </strong>Left/Right/Down arrows
         </li>
-      
+
         <li>
           <strong>Rotate block: </strong>Up arrow
         </li>
-      
+
         <li>
           <strong>Quick drop: </strong>Space bar
         </li>
-      
+
         <li><strong>Pause: </strong>P</li>
       </ul>
     </div>
-  
 
-
-
-  
   <script>
   $(function() {
-	  var game = document.getElementById("game");
-	  var gameContext = game.getContext("2d");
-	  var tetrisGame = new TetrisGame.Game(gameContext); 
-		tetrisGame.start();
+    var game = document.getElementById("game");
+    var gameContext = game.getContext("2d");
+    var tetrisGame = new TetrisGame.Game(gameContext);
+    tetrisGame.start();
   })
   </script>
-  
+
 </body>
 
 </html>
