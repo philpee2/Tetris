@@ -172,12 +172,7 @@
 
   // Returns true if the array row is completely full of cells.
   Game.prototype.containsLine = function(row) {
-    for (var i = 0; i < row.length; i++) {
-      if (!row[i]) {
-        return false;
-      }
-    }
-    return true;
+    return _.all(row);
   };
 
   Game.prototype.clearLine = function(rowIndex) {
