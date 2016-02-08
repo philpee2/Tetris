@@ -1,102 +1,106 @@
-(function(root) {
-  var TetrisGame = root.TetrisGame = (root.TetrisGame || {});
-  var Settings = TetrisGame.Settings;
-  var Cell = TetrisGame.Cell;
+const Settings = require('./settings'),
+  Cell = require('./cell');
 
-  // The block represents the group of four cells that the player controls at any given
-  // time. It stores an array of cells.
-  // Given a type of block, the constructor determines its color and the starting
-  // position of its cells
-  var Block = TetrisGame.Block = function(game, type) {
+// The block represents the group of four cells that the player controls at any given
+// time. It stores an array of cells.
+// Given a type of block, the constructor determines its color and the starting
+// position of its cells
+class Block {
+
+  static get TYPES() {
+    return Settings.block.TYPES;
+  }
+
+  static get STARTING_POSITIONS() {
+    return Settings.block.STARTING_POSITIONS;
+  }
+
+  static get TYPE_COLORS() {
+    return Settings.block.TYPE_COLORS;
+  }
+
+  static randomBlock(game) {
+    const type = _.sample(Block.TYPES);
+    return new Block(game, type);
+  }
+
+  constructor(game, type) {
     this.game = game;
     this.color = Block.TYPE_COLORS[type];
     this.type = type;
 
-    var block = this;
-    var positions = Block.STARTING_POSITIONS[type];
-    this.cells = positions.map(function(pos) {
-      return new Cell(pos.slice(), block);
+    const positions = Block.STARTING_POSITIONS[type];
+    this.cells = positions.map( (pos) => {
+      return new Cell(pos.slice(), this);
     });
-  };
+  }
 
-  Block.TYPES = Settings.block.TYPES;
-  Block.STARTING_POSITIONS = Settings.block.STARTING_POSITIONS;
-  Block.TYPE_COLORS = Settings.block.TYPE_COLORS;
-
-  Block.randomBlock = function(game) {
-    var type = _.sample(Block.TYPES);
-    return new Block(game, type);
-  };
-
-  Block.prototype.rotate = function() {
+  rotate() {
     if (this.canRotate()) {
       // The first cell in a block represents the 'pivot', which other cells
       // rotate around
-      var pivot = this.cells[0];
-      this.cells.forEach(function(cell) {
+      const pivot = this.cells[0];
+      this.cells.forEach( (cell) => {
         cell.rotateAroundPivot(pivot);
       });
     }
-  };
+  }
 
-  Block.prototype.canRotate = function() {
+  canRotate() {
     // An O block cannot rotate
     if (this.type === "O") {
       return false;
     }
 
-    var pivot = this.cells[0];
-    var game = this.game;
-    return _.all(this.cells, function(cell) {
-      return cell.canRotate(pivot, game);
+    const pivot = this.cells[0];
+    return _.every(this.cells, (cell) => {
+      return cell.canRotate(pivot, this.game);
     });
   }
 
-  Block.prototype.moveDirection = function(direction) {
+  moveDirection(direction) {
     if (this.canMoveDirection(direction)) {
-      this.cells.forEach(function(cell) {
+      this.cells.forEach( (cell) => {
         cell.moveDirection(direction);
       });
     }
-  };
+  }
 
-  Block.prototype.draw = function(ctx) {
-    this.cells.forEach(function(cell){
+  draw(ctx) {
+    this.cells.forEach( (cell) => {
       cell.draw(ctx);
     });
-  };
+  }
 
-  Block.prototype.drop = function() {
-    var block = this;
-    var game = this.game;
+  drop() {
     if (this.canMoveDirection("down")) {
-      this.cells.forEach(function(cell) {
+      this.cells.forEach( (cell) => {
         cell.drop();
       });
     } else {
       // If a block cannot drop further, place it on the grid.
-      game.blockPlaced(this);
+      this.game.blockPlaced(this);
     }
-  };
+  }
 
-  Block.prototype.aboveTop = function() {
-    var game = this.game;
-    return _.any(this.cells, function(cell) {
-      return cell.getY() >= game.HEIGHT - 1;
+  aboveTop() {
+    return _.some(this.cells, (cell) => {
+      return cell.getY() >= this.game.HEIGHT - 1;
     });
-  };
+  }
 
-  Block.prototype.quickDrop = function() {
+  quickDrop() {
     while (this.canMoveDirection("down")) {
       this.drop();
     }
-  };
+  }
 
-  Block.prototype.canMoveDirection = function(direction) {
-    var game = this.game;
-    return _.all(this.cells, function(cell) {
-      return cell.canMoveDirection(direction, game);
+  canMoveDirection(direction) {
+    return _.every(this.cells, (cell) => {
+      return cell.canMoveDirection(direction, this.game);
     });
-  };
+  }
 
-})(this);
+}
+
+module.exports = Block;

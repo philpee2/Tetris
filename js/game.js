@@ -1,10 +1,29 @@
-(function(root) {
-  var TetrisGame = root.TetrisGame = (root.TetrisGame || {});
-  var Settings = TetrisGame.Settings;
-  var Block = TetrisGame.Block;
-  var Cell = TetrisGame.Cell;
+const Settings = require("./settings"),
+  Block = require("./block"),
+  Cell = require("./cell"),
+  key = require('keymaster'),
+  $ = require('jquery'),
+  _ = require('lodash');
 
-  var Game = TetrisGame.Game = function(ctx) {
+class Game {
+
+  static get FPS() {
+    return Settings.game.FPS;
+  }
+
+  static get DIM_X() {
+    return Settings.game.DIM_X;
+  }
+
+  static get DIM_Y() {
+    return Settings.game.DIM_Y;
+  }
+
+  static get SCORE_MAP() {
+    return Settings.game.SCORE_MAP;
+  }
+
+  constructor(ctx) {
     this.ctx = ctx;
 
     // Constants representing the number of rows and columns
@@ -19,130 +38,107 @@
     this.bindKeyHandlers();
 
     this.initializeNewGameState();
-  };
+  }
 
-  Game.prototype.initializeNewGameState = function() {
+  initializeNewGameState() {
     // The player's current score in the game.
     this.score = 0;
     $("#score").html(this.score);
 
     // The grid is a 2D array containing either nulls, or cell
-    // objects. It represents
-    // the game's grid of cells.
+    // objects. It represents the game's grid of cells.
     this.grid = this.createEmptyGrid(this.WIDTH, this.HEIGHT);
 
     // This is the block that the player can currently control.
     this.block = Block.randomBlock(this);
     this.frame = 0;
-  };
+  }
 
-  Game.FPS = Settings.game.FPS;
-  Game.DIM_X = Settings.game.DIM_X;
-  Game.DIM_Y = Settings.game.DIM_Y;
-  Game.SCORE_MAP = Settings.game.SCORE_MAP;
-
-  Game.prototype.getGridItem = function(pos) {
+  getGridItem(pos) {
     return this.grid[pos[1]][pos[0]];
-  };
+  }
 
-  Game.prototype.setGridItem = function(pos, item) {
+  setGridItem(pos, item) {
     this.grid[pos[1]][pos[0]] = item;
-  };
+  }
 
-  Game.prototype.isEmpty = function(pos) {
+  isEmpty(pos) {
     return this.getGridItem(pos) === undefined;
-  };
+  }
 
-  Game.prototype.start = function() {
+  start() {
     // Begin running the 'step' logic 30 times per second.
-
-    var interval = Math.floor(1000/Game.FPS);
+    const interval = Math.floor(1000/Game.FPS);
     this.intervalID = window.setInterval(this.step.bind(this), interval);
-  };
+  }
 
-  Game.prototype.step = function() {
+  step() {
     // The game is rendered 30 times per second, but blocks drop at a slower
     // rate, which is determined by the speed instance variable.
-
-    var movesPerSecond = Game.FPS / this.speed;
+    const movesPerSecond = Game.FPS / this.speed;
     if (this.frame % movesPerSecond === 0) {
       this.move();
     }
     this.frame = (this.frame + 1) % Game.FPS;
     this.draw();
-  };
+  }
 
-  Game.prototype.move = function() {
+  move() {
     this.block.drop();
-  };
+  }
 
-  Game.prototype.draw = function() {
+  draw() {
     // Every frame, the canvas is cleared and both the block and grid are redrawn.
-
     this.ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
     this.block.draw(this.ctx);
     this.drawGrid();
-  };
+  }
 
-  Game.prototype.drawGrid = function() {
-    for (var i = 0; i < this.WIDTH; i++) {
-      for (var j = 0; j < this.HEIGHT; j++) {
-        var cell = this.getGridItem([i, j]);
+  drawGrid() {
+    for (let i = 0; i < this.WIDTH; i++) {
+      for (let j = 0; j < this.HEIGHT; j++) {
+        const cell = this.getGridItem([i, j]);
         if (cell) {
-
           // If the cell's draw method is given a position, it ignores the cell's own
           // position and draws at the given one instead.
           cell.draw(this.ctx, [i, j]);
         }
       }
     }
-  };
+  }
 
-  Game.prototype.stop = function(){
+  stop(){
     clearInterval(this.intervalID);
-  };
+  }
 
-  Game.prototype.gameOver = function() {
+  gameOver() {
     this.stop();
-    var again = confirm("Game Over! Your score is " + this.score + ". Do you want to play again?");
+    const again = confirm(`Game Over! Your score is ${this.score}. Do you want to play again?`);
     if (again) {
       this.restart();
     }
-  };
+  }
 
-  Game.prototype.restart = function() {
+  restart() {
     this.initializeNewGameState();
     this.start();
-  };
+  }
 
-  Game.prototype.bindKeyHandlers = function() {
-    var game = this;
-    key("up", function() {
-      game.block.rotate();
-    });
+  bindKeyHandlers() {
+    key("up", () => this.block.rotate());
 
-    key("down", function() {
-      game.block.drop();
-    });
+    key("down", () => this.block.drop());
 
-    key("left", function() {
-      game.block.moveDirection("left");
-    });
+    key("left", () => this.block.moveDirection("left"));
 
-    key("right", function() {
-      game.block.moveDirection("right");
-    });
+    key("right", () => this.block.moveDirection("right"));
 
-    key("space", function() {
-      game.block.quickDrop();
-    });
+    key("space", () => this.block.quickDrop());
 
-    key("P", function(){
-      game.togglePause();
-    });
-  };
+    key("P", () => this.togglePause());
+  }
 
-  Game.prototype.togglePause = function(){
+  togglePause(){
     if (this.paused){
       // Unpause
       this.start();
@@ -152,16 +148,16 @@
       this.stop();
       this.paused = true;
     }
-  };
+  }
 
-  Game.prototype.checkForLines = function() {
+  checkForLines() {
     // Check if the player has cleared any full lines.
 
     var i = 0;
     // More points are awarded if a player clears multiple lines with one drop.
     var numLines = 0;
     while (i < this.HEIGHT) {
-      var row = this.grid[i];
+      let row = this.grid[i];
       if (this.containsLine(row)) {
         numLines++;
         this.clearLine(i);
@@ -173,58 +169,56 @@
   };
 
   // Returns true if the array row is completely full of cells.
-  Game.prototype.containsLine = function(row) {
-    return _.all(row);
-  };
+  containsLine(row) {
+    return _.every(row);
+  }
 
-  Game.prototype.clearLine = function(rowIndex) {
+  clearLine(rowIndex) {
     // Remove the row at rowIndex, and push an empty row to the top of the grid.
-
     this.grid.splice(rowIndex, 1);
-    var row = new Array(this.WIDTH);
+    const row = new Array(this.WIDTH);
     this.grid.push(row);
-  };
+  }
 
-  Game.prototype.awardPoints = function(numLines) {
+  awardPoints(numLines) {
     // Update the player's score, and update the HTML that displays the score.
-
     this.score += (this.speed * Game.SCORE_MAP[numLines]);
     $("#score").html(this.score);
-  };
+  }
 
-  Game.prototype.validPosition = function(pos) {
-    var x = pos[0];
-    var y = pos[1];
+  validPosition(pos) {
+    const x = pos[0];
+    const y = pos[1];
     return (x >= 0) && (x < this.WIDTH) && (y >= 0) && (y < this.HEIGHT)
       && (this.isEmpty(pos));
-  };
+  }
 
-  Game.prototype.createEmptyGrid = function(width, height) {
-    var grid = new Array(height);
-    for (var i = 0; i < grid.length; i++) {
-      var row = new Array(width);
+  createEmptyGrid(width, height) {
+    const grid = new Array(height);
+    for (let i = 0; i < grid.length; i++) {
+      let row = new Array(width);
       grid[i] = row;
     }
 
     return grid;
-  };
+  }
 
-  Game.prototype.setBlockOnGrid = function(block) {
-    var game = this;
-    block.cells.forEach(function(cell) {
-      game.setGridItem(cell.pos, cell);
+  setBlockOnGrid(block) {
+    block.cells.forEach( (cell) => {
+      this.setGridItem(cell.pos, cell);
     });
-  };
+  }
 
   // Called when a block is placed onto the grid. Update the grid, create a new
   //  random block, and check to see if the player has cleared any lines.
-  Game.prototype.blockPlaced = function(block) {
+  blockPlaced(block) {
     this.setBlockOnGrid(block);
     if (block.aboveTop()) {
       this.gameOver();
     }
     this.block = Block.randomBlock(this);
     this.checkForLines();
-  };
+  }
+}
 
-})(this);
+module.exports = Game;

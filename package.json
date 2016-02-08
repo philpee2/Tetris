@@ -1,0 +1,30 @@
+{
+  "name": "Tetris",
+  "version": "1.0.0",
+  "description": "This is a browser version of Tetris written in Javascript, using HTML canvas. A live version can be found [here](http://philnachumtetris.firebaseapp.com/). Control instructions are on that page.",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/philpee2/Tetris.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/philpee2/Tetris/issues"
+  },
+  "homepage": "https://github.com/philpee2/Tetris",
+  "dependencies": {
+    "babel-core": "^6.5.0",
+    "babel-loader": "^6.2.2",
+    "jquery": "^2.2.0",
+    "keymaster": "^1.6.2",
+    "lodash": "^4.2.1",
+    "webpack": "^1.12.13"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.5.0"
+  }
+}
