@@ -30,9 +30,7 @@ class Block {
     this.type = type;
 
     const positions = Block.STARTING_POSITIONS[type];
-    this.cells = positions.map( (pos) => {
-      return new Cell(pos.slice(), this);
-    });
+    this.cells = positions.map( (pos) => new Cell(pos.slice(), this));
   }
 
   rotate() {
@@ -40,9 +38,7 @@ class Block {
       // The first cell in a block represents the 'pivot', which other cells
       // rotate around
       const pivot = this.cells[0];
-      this.cells.forEach( (cell) => {
-        cell.rotateAroundPivot(pivot);
-      });
+      this.cells.forEach( (cell) => cell.rotateAroundPivot(pivot));
     }
   }
 
@@ -53,30 +49,22 @@ class Block {
     }
 
     const pivot = this.cells[0];
-    return _.every(this.cells, (cell) => {
-      return cell.canRotate(pivot, this.game);
-    });
+    return _.every(this.cells, (cell) => cell.canRotate(pivot, this.game));
   }
 
   moveDirection(direction) {
     if (this.canMoveDirection(direction)) {
-      this.cells.forEach( (cell) => {
-        cell.moveDirection(direction);
-      });
+      this.cells.forEach( (cell) => cell.moveDirection(direction));
     }
   }
 
   draw(ctx) {
-    this.cells.forEach( (cell) => {
-      cell.draw(ctx);
-    });
+    this.cells.forEach( (cell) => cell.draw(ctx));
   }
 
   drop() {
     if (this.canMoveDirection("down")) {
-      this.cells.forEach( (cell) => {
-        cell.drop();
-      });
+      this.cells.forEach( (cell) => cell.drop());
     } else {
       // If a block cannot drop further, place it on the grid.
       this.game.blockPlaced(this);
@@ -84,9 +72,7 @@ class Block {
   }
 
   aboveTop() {
-    return _.some(this.cells, (cell) => {
-      return cell.getY() >= this.game.HEIGHT - 1;
-    });
+    return _.some(this.cells, (cell) => cell.getY() >= this.game.HEIGHT - 1);
   }
 
   quickDrop() {

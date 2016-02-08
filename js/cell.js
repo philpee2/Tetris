@@ -7,10 +7,9 @@ class Cell {
   }
 
   static mapToScreen(pos) {
-    var x = pos[0];
-    var y = pos[1];
-    var pixelX = x * Cell.DIMENSION;
-    var pixelY = Settings.game.DIM_Y - ((y + 1) * Cell.DIMENSION);
+    const [x, y] = pos;
+    const pixelX = x * Cell.DIMENSION;
+    const pixelY = Settings.game.DIM_Y - ((y + 1) * Cell.DIMENSION);
     return [pixelX, pixelY];
   }
 
@@ -46,16 +45,14 @@ class Cell {
 
     // Convert the grid coordinate into a pixel coordinate
     const pixelPos = Cell.mapToScreen(pos);
-    const x = pixelPos[0];
-    const y = pixelPos[1];
+    const [x, y] = pixelPos;
     const dimension = Cell.DIMENSION;
     ctx.fillStyle = this.color;
     ctx.fillRect(x, y, dimension, dimension);
   }
 
   canMoveDirection(direction, game) {
-    const currX = this.getX();
-    const currY = this.getY();
+    const [currX, currY] = [this.getX(), this.getY()];
     switch (direction) {
     case "left":
       return game.validPosition([currX - 1, currY]);
@@ -69,8 +66,7 @@ class Cell {
   rotatedPosition(pivot) {
     // Returns the new position that this cell would be in if it rotated.
     // Does not actually change the cell's position
-    const pivotX = pivot.pos[0];
-    const pivotY = pivot.pos[1];
+    const [pivotX, pivotY] = pivot.pos;
     const distanceX = this.pos[0] - pivotX;
     const distanceY = this.pos[1] - pivotY;
     const newX = pivotX - distanceY;

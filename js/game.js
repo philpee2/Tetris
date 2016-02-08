@@ -1,6 +1,5 @@
 const Settings = require("./settings"),
   Block = require("./block"),
-  Cell = require("./cell"),
   key = require('keymaster'),
   $ = require('jquery'),
   _ = require('lodash');
@@ -204,9 +203,7 @@ class Game {
   }
 
   setBlockOnGrid(block) {
-    block.cells.forEach( (cell) => {
-      this.setGridItem(cell.pos, cell);
-    });
+    block.cells.forEach( (cell) => this.setGridItem(cell.pos, cell));
   }
 
   // Called when a block is placed onto the grid. Update the grid, create a new
