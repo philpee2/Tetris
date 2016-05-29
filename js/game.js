@@ -1,8 +1,8 @@
-const Settings = require("./settings"),
-  Block = require("./block"),
-  key = require('keymaster'),
-  $ = require('jquery'),
-  _ = require('lodash');
+import Settings from './settings';
+import Block from './block';
+import key from 'keymaster';
+import $ from 'jquery';
+import { every } from 'lodash';
 
 class Game {
 
@@ -169,7 +169,7 @@ class Game {
 
   // Returns true if the array row is completely full of cells.
   containsLine(row) {
-    return _.every(row);
+    return every(row);
   }
 
   clearLine(rowIndex) {
@@ -218,4 +218,4 @@ class Game {
   }
 }
 
-module.exports = Game;
+export default Game;

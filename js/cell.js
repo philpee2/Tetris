@@ -1,4 +1,4 @@
-const Settings = require('./settings');
+import Settings from './settings';
 
 class Cell {
 
@@ -102,4 +102,4 @@ class Cell {
   }
 }
 
-module.exports = Cell;
+export default Cell;

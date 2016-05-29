@@ -1,5 +1,5 @@
-const Settings = require('./settings'),
-  Cell = require('./cell');
+import Settings from './settings';
+import Cell from './cell';
 
 // The block represents the group of four cells that the player controls at any given
 // time. It stores an array of cells.
@@ -89,4 +89,4 @@ class Block {
 
 }
 
-module.exports = Block;
+export default Block;

@@ -1,5 +1,5 @@
-var Game = require('./js/game');
-var $ = require('jquery');
+import Game from './js/game';
+import $ from 'jquery';
 
 $(function() {
   var gameElement = document.getElementById("game");
