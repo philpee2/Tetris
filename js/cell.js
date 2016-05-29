@@ -20,7 +20,7 @@ class Cell {
   }
 
   drop() {
-    this.moveDirection("down");
+    this.moveDirection('down');
   }
 
   moveDirection(direction) {
@@ -41,11 +41,10 @@ class Cell {
     // If pos is provided, then this cell is on the game grid, and its own position
     // should be ignored. If pos is not provided, then this cell is in the live
     // block, and its own position should be drawn.
-    var pos = pos || this.pos;
+    const position = pos || this.pos;
 
     // Convert the grid coordinate into a pixel coordinate
-    const pixelPos = Cell.mapToScreen(pos);
-    const [x, y] = pixelPos;
+    const [x, y] = Cell.mapToScreen(position);
     const dimension = Cell.DIMENSION;
     ctx.fillStyle = this.color;
     ctx.fillRect(x, y, dimension, dimension);

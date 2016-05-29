@@ -2,8 +2,8 @@ import Game from './js/game';
 import $ from 'jquery';
 
 $(function() {
-  var gameElement = document.getElementById("game");
-  var gameContext = gameElement.getContext("2d");
-  var tetrisGame = new Game(gameContext);
+  const gameElement = document.getElementById('game');
+  const gameContext = gameElement.getContext('2d');
+  const tetrisGame = new Game(gameContext);
   tetrisGame.start();
 });

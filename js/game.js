@@ -2,7 +2,7 @@ import Settings from './settings';
 import Block from './block';
 import key from 'keymaster';
 import $ from 'jquery';
-import { every } from 'lodash';
+import { every, times } from 'lodash';
 
 class Game {
 
@@ -54,21 +54,23 @@ class Game {
   }
 
   getGridItem(pos) {
-    return this.grid[pos[1]][pos[0]];
+    const [x, y] = pos;
+    return this.grid[y][x];
   }
 
   setGridItem(pos, item) {
-    this.grid[pos[1]][pos[0]] = item;
+    const [x, y] = pos;
+    this.grid[y][x] = item;
   }
 
   isEmpty(pos) {
-    return this.getGridItem(pos) === undefined;
+    return this.getGridItem(pos) == null;
   }
 
   start() {
     // Begin running the 'step' logic 30 times per second.
-    const interval = Math.floor(1000/Game.FPS);
-    this.intervalID = window.setInterval(this.step.bind(this), interval);
+    const interval = Math.floor(1000 / Game.FPS);
+    this.intervalID = setInterval(this.step.bind(this), interval);
   }
 
   step() {
@@ -94,16 +96,16 @@ class Game {
   }
 
   drawGrid() {
-    for (let i = 0; i < this.WIDTH; i++) {
-      for (let j = 0; j < this.HEIGHT; j++) {
+    times(this.WIDTH, (i) => {
+      times(this.HEIGHT, (j) => {
         const cell = this.getGridItem([i, j]);
         if (cell) {
           // If the cell's draw method is given a position, it ignores the cell's own
           // position and draws at the given one instead.
           cell.draw(this.ctx, [i, j]);
         }
-      }
-    }
+      });
+    });
   }
 
   stop(){
@@ -124,21 +126,21 @@ class Game {
   }
 
   bindKeyHandlers() {
-    key("up", () => this.block.rotate());
+    key('up', () => this.block.rotate());
 
-    key("down", () => this.block.drop());
+    key('down', () => this.block.drop());
 
-    key("left", () => this.block.moveDirection("left"));
+    key('left', () => this.block.moveDirection('left'));
 
-    key("right", () => this.block.moveDirection("right"));
+    key('right', () => this.block.moveDirection('right'));
 
-    key("space", () => this.block.quickDrop());
+    key('space', () => this.block.quickDrop());
 
-    key("P", () => this.togglePause());
+    key('P', () => this.togglePause());
   }
 
   togglePause(){
-    if (this.paused){
+    if (this.paused) {
       // Unpause
       this.start();
       this.paused = false;
@@ -152,9 +154,9 @@ class Game {
   checkForLines() {
     // Check if the player has cleared any full lines.
 
-    var i = 0;
+    let i = 0;
     // More points are awarded if a player clears multiple lines with one drop.
-    var numLines = 0;
+    let numLines = 0;
     while (i < this.HEIGHT) {
       let row = this.grid[i];
       if (this.containsLine(row)) {
@@ -186,24 +188,21 @@ class Game {
   }
 
   validPosition(pos) {
-    const x = pos[0];
-    const y = pos[1];
+    const [x, y] = pos;
     return (x >= 0) && (x < this.WIDTH) && (y >= 0) && (y < this.HEIGHT)
       && (this.isEmpty(pos));
   }
 
   createEmptyGrid(width, height) {
-    const grid = new Array(height);
-    for (let i = 0; i < grid.length; i++) {
-      let row = new Array(width);
-      grid[i] = row;
-    }
-
-    return grid;
+    return times(height, () => {
+      return times(width, () => {
+        return undefined;
+      });
+    });
   }
 
   setBlockOnGrid(block) {
-    block.cells.forEach( (cell) => this.setGridItem(cell.pos, cell));
+    block.cells.forEach(cell => this.setGridItem(cell.pos, cell));
   }
 
   // Called when a block is placed onto the grid. Update the grid, create a new
