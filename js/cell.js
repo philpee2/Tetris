@@ -2,9 +2,7 @@ import Settings from './settings';
 
 class Cell {
 
-  static get DIMENSION() {
-    return Settings.cell.DIMENSION;
-  }
+  static DIMENSION = Settings.cell.DIMENSION;
 
   static mapToScreen(pos) {
     const [x, y] = pos;

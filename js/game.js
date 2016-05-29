@@ -6,21 +6,10 @@ import { every, times } from 'lodash';
 
 class Game {
 
-  static get FPS() {
-    return Settings.game.FPS;
-  }
-
-  static get DIM_X() {
-    return Settings.game.DIM_X;
-  }
-
-  static get DIM_Y() {
-    return Settings.game.DIM_Y;
-  }
-
-  static get SCORE_MAP() {
-    return Settings.game.SCORE_MAP;
-  }
+  static FPS = Settings.game.FPS;
+  static DIM_X = Settings.game.DIM_X;
+  static DIM_Y = Settings.game.DIM_Y;
+  static SCORE_MAP = Settings.game.SCORE_MAP;
 
   constructor(ctx) {
     this.ctx = ctx;

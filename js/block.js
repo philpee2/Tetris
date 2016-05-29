@@ -8,17 +8,9 @@ import { sample, some, every } from 'lodash';
 // position of its cells
 class Block {
 
-  static get TYPES() {
-    return Settings.block.TYPES;
-  }
-
-  static get STARTING_POSITIONS() {
-    return Settings.block.STARTING_POSITIONS;
-  }
-
-  static get TYPE_COLORS() {
-    return Settings.block.TYPE_COLORS;
-  }
+  static TYPES = Settings.block.TYPES;
+  static STARTING_POSITIONS = Settings.block.STARTING_POSITIONS;
+  static TYPE_COLORS = Settings.block.TYPE_COLORS;
 
   static randomBlock(game) {
     const type = sample(Block.TYPES);
